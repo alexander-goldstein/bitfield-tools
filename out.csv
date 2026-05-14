@@ -1,0 +1,19 @@
+Register,Register Name,Value (Bitfield Values),Bitfield,Bitfield Value,Decoding
+0x5F,M1_SW_MODE,"0x550D (101,0101,0000,1101)",virtual_Step_enc[14],1,0x1: Virtual stop relates to encoder position X_ENC.
+0x5F,M1_SW_MODE,"0x550D (101,0101,0000,1101)",en_cirtual_stop_r[13],0,
+0x5F,M1_SW_MODE,"0x550D (101,0101,0000,1101)",en_virtual_stop_l[12],1,
+0x5F,M1_SW_MODE,"0x550D (101,0101,0000,1101)",en_softstop[11],0,
+0x5F,M1_SW_MODE,"0x550D (101,0101,0000,1101)",sg_stop[10],1,
+0x5F,M1_SW_MODE,"0x550D (101,0101,0000,1101)",en_latch_encoder[9],0,
+0x5F,M1_SW_MODE,"0x550D (101,0101,0000,1101)",latch_r_inactive[8],1,
+0x5F,M1_SW_MODE,"0x550D (101,0101,0000,1101)",latch_r_active[7],0,
+0x5F,M1_SW_MODE,"0x550D (101,0101,0000,1101)",latch_l_inactive[6],0,
+0x5F,M1_SW_MODE,"0x550D (101,0101,0000,1101)",latch_l_active[5],0,
+0x5F,M1_SW_MODE,"0x550D (101,0101,0000,1101)",swap_lr[4],0,0x0: Default assignments 
+0x5F,M1_SW_MODE,"0x550D (101,0101,0000,1101)",pol_stop_r[3],1,"0x1: Not inverted, active high: a high level on REFR stops the motor "
+0x5F,M1_SW_MODE,"0x550D (101,0101,0000,1101)",pol_stop_l[2],1,"0x1: Inverted, low active: a low level on REFL stops the motor"
+0x5F,M1_SW_MODE,"0x550D (101,0101,0000,1101)",stop_r_enable[1],0,
+0x5F,M1_SW_MODE,"0x550D (101,0101,0000,1101)",stop_l_enable[0],1,
+0x62,M1_POSITION_P_CTRL,"0x101B000C (1, x1B, x00C)",en_tol_on_pos_reached[28],1,0x1: The P-controller ignores absolute errors below tolerance only when the pos_reached flag (M1_RAMP_STAT[9]) of the motion controller is set to 1. 
+0x62,M1_POSITION_P_CTRL,"0x101B000C (1, x1B, x00C)",Tolerance[23:16],0x1B,
+0x62,M1_POSITION_P_CTRL,"0x101B000C (1, x1B, x00C)",P[9:0],0x00C,

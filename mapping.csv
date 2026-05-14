@@ -1,0 +1,31 @@
+Address,Register Name,Register Width,Bitfield Range,Bitfield Name,Bitfield Description,Bitfield Decode
+0x5F,M1_SW_MODE,,14,virtual_Step_enc,Source for virtual stop (VIRTUAL_STOP_L and VIRTUAL_STOP_R),"0x0: Virtual stop relates to ramp-generator position XACTUAL.
+0x1: Virtual stop relates to encoder position X_ENC."
+0x5F,M1_SW_MODE,,13,en_cirtual_stop_r,Automatic motor stop during active right virtual stop condition,
+0x5F,M1_SW_MODE,,12,en_virtual_stop_l,Enables automatic motor stop during active left virtual stop condition,
+0x5F,M1_SW_MODE,,11,en_softstop,"The soft stop mode always uses the deceleration ramp settings DMAX, V1, D1, V2, D2, VSTOP, and TZEROWAIT for stopping the motor. A stop occurs when the velocity sign matches the reference switch position (REFL and VIRTUAL_STOP_L for negative velocities; REFR and VIRTUAL_STOP_R for positive velocities) and the respective switch stop function is enabled. A hard stop also uses TZEROWAIT before the motor becomes released. Note: Do not use soft stop in combination with StallGuard2/4. Use soft stop for StealthChop2 operation at high velocity. In this case, hard stop must be avoided as it could result in severe overcurrent.",
+0x5F,M1_SW_MODE,,10,sg_stop,"Enable stop by StallGuard2/4. Disable to release motor after stop event. Program TCOOLTHRS for velocity threshold. Do not enable during motor spin-up. Wait until the motor velocity exceeds a certain value, where StallGuard2/4 delivers a stable result. This velocity threshold should be programmed using TCOOLTHRS.",
+0x5F,M1_SW_MODE,,9,en_latch_encoder,Latch encoder position to ENC_LATCH upon reference switch event,
+0x5F,M1_SW_MODE,,8,latch_r_inactive,Activates latching of the position to XLATCH upon an inactive edge on the right reference switch input REFR. The active level is defined by pol_stop_r.,
+0x5F,M1_SW_MODE,,7,latch_r_active,Activates latching of the position to XLATCH upon an active edge on the right reference switch input REFR. Activate latch_r_active to detect any spurious stop event by reading status_latch_r.,
+0x5F,M1_SW_MODE,,6,latch_l_inactive,Activates latching of the position to XLATCH upon an inactive edge on the left reference switch input REFL. The active level is defined by pol_stop_l.,
+0x5F,M1_SW_MODE,,5,latch_l_active,Activates latching of the position to XLATCH upon an active edge on the left reference switch input REFL. Activate latch_l_active to detect any spurious stop event by reading status_latch_l.,
+0x5F,M1_SW_MODE,,4,swap_lr,Swap the left and the right reference switch input REFL and REFR,"0x0: Default assignments 
+0x1: REFL and REFR switched"
+0x5F,M1_SW_MODE,,3,pol_stop_r,,"0x0: Not inverted, active high: a high level on 
+REFR stops the motor 
+0x1: Inverted, active low: a low level on REFR 
+stops the motor"
+0x5F,M1_SW_MODE,,2,pol_stop_l,Sets the active polarity of the left reference switch input,"0x0: Non-inverted, high active: a high level on 
+REFL stops the motor 
+0x1: Inverted, low active: a low level on REFL 
+stops the motor"
+0x5F,M1_SW_MODE,,1,stop_r_enable,Enables automatic motor stop during active right reference switch input. The motor restarts when the stop switch is released.,
+0x5F,M1_SW_MODE,,0,stop_l_enable,Enables automatic motor stop during active left reference switch input. The motor restarts when the stop switch is released,
+0x62,M1_POSITION_P_CTRL,,28,en_tol_on_pos_reached,Enable tolerance once the motion controller reached the target position.,"0x0: The P-controller ignores absolute errors below 
+the tolerance. 
+0x1: The P-controller ignores absolute errors below tolerance only when the pos_reached flag (M1_RAMP_STAT[9]) of the motion controller is set to 1. "
+0x62,M1_POSITION_P_CTRL,,23:16,Tolerance,P-controller error tolerance setting.,
+0x62,M1_POSITION_P_CTRL,,9:0,P,"Proportional parameter for position P-regulator. P=0 disables P-regulator. P > 0 enables P-regulator function.
+Unit 10.0, no fractional part.",
+,,,,,,
