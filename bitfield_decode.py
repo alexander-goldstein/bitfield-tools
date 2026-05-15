@@ -81,7 +81,7 @@ def decode_bitfields(value, bitfields):
 
 def format_output(values):
     """Format extracted values as hex strings."""
-    return ' '.join(f"0x{v:X}" for v in values)
+    return ' '.join(f"x{v:X}" for v in values)
 
 
 def process_line(line):
