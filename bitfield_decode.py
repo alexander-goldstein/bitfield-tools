@@ -3,8 +3,9 @@
 Bitfield Decode - Extract bitfield values from a hex or decimal number.
 
 Usage:
-    bitfield_decode.py [value] [bitfields]
+    bitfield_decode.py [-l|--list] [value] [bitfields]
     
+    -l, --list: Output each bitfield on a separate line with alignment
     value: Hex (0x###) or decimal number
     bitfields: Space or comma-separated bitfield specs (e.g., "31:26 25:20 19")
     
@@ -13,6 +14,7 @@ Usage:
 
 import sys
 import re
+import argparse
 
 
 def parse_value(value_str):
@@ -84,7 +86,37 @@ def format_output(values):
     return ' '.join(f"x{v:X}" for v in values)
 
 
-def process_line(line):
+def format_verbose_output(bitfields, values):
+    """Format output with each bitfield on a separate line."""
+    lines = []
+    
+    # Find the maximum length of the bitfield spec for alignment
+    max_len = 0
+    bitfield_specs = []
+    for high, low in bitfields:
+        if high == low:
+            spec = str(high)
+        else:
+            spec = f"{high}:{low}"
+        bitfield_specs.append(spec)
+        max_len = max(max_len, len(spec))
+    
+    # Format each line
+    for spec, (high, low), value in zip(bitfield_specs, bitfields, values):
+        # For single bits, output just 1 or 0
+        if high == low:
+            value_str = str(value)
+        else:
+            value_str = f"x{value:X}"
+        
+        # Right-align the spec and add colon with spaces
+        aligned_spec = spec.rjust(max_len)
+        lines.append(f"{aligned_spec} : {value_str}")
+    
+    return '\n'.join(lines)
+
+
+def process_line(line, list_mode=False):
     """Process a single line of input."""
     parts = line.strip().split(None, 1)
     if len(parts) < 2:
@@ -98,12 +130,15 @@ def process_line(line):
         if not bitfields:
             return None, "Error: No valid bitfields specified"
         results = decode_bitfields(value, bitfields)
-        return format_output(results), None
+        if list_mode:
+            return format_verbose_output(bitfields, results), None
+        else:
+            return format_output(results), None
     except ValueError as e:
         return None, f"Error: {e}"
 
 
-def interactive_mode():
+def interactive_mode(list_mode=False):
     """Run in interactive mode."""
     print("Bitfield Decoder - Interactive Mode")
     print("Enter value and bitfields (e.g., '0x1234 15:12 11:8 7:0')")
@@ -118,7 +153,7 @@ def interactive_mode():
             if not line:
                 continue
                 
-            result, error = process_line(line)
+            result, error = process_line(line, list_mode)
             if error:
                 print(error)
             else:
@@ -133,27 +168,51 @@ def interactive_mode():
 
 def main():
     """Main entry point."""
-    if len(sys.argv) == 1:
+    parser = argparse.ArgumentParser(
+        description='Extract bitfield values from a hex or decimal number.',
+        add_help=False
+    )
+    parser.add_argument('-l', '--list', action='store_true',
+                        help='Output each bitfield on a separate line with alignment')
+    parser.add_argument('-h', '--help', action='store_true',
+                        help='Show this help message')
+    parser.add_argument('value', nargs='?',
+                        help='Hex (0x###) or decimal number')
+    parser.add_argument('bitfields', nargs='?',
+                        help='Space or comma-separated bitfield specs')
+    
+    args = parser.parse_args()
+    
+    if args.help:
+        print("Usage: bitfield_decode.py [-l|--list] [value] [bitfields]", file=sys.stderr)
+        print("  -l, --list: Output each bitfield on a separate line", file=sys.stderr)
+        print("  value: Hex (0x###) or decimal number", file=sys.stderr)
+        print("  bitfields: Space or comma-separated bitfield specs", file=sys.stderr)
+        print("  Example: bitfield_decode.py 0x5453 '15:12 11:7 6:5 4:0'", file=sys.stderr)
+        print("  Or run without arguments for interactive mode", file=sys.stderr)
+        sys.exit(0)
+    
+    if args.value is None and args.bitfields is None:
         # No arguments - interactive mode
-        interactive_mode()
-    elif len(sys.argv) == 3:
+        interactive_mode(args.list)
+    elif args.value is not None and args.bitfields is not None:
         # Command-line mode
-        value_str = sys.argv[1]
-        bitfields_str = sys.argv[2]
-        
         try:
-            value = parse_value(value_str)
-            bitfields = parse_bitfields(bitfields_str)
+            value = parse_value(args.value)
+            bitfields = parse_bitfields(args.bitfields)
             if not bitfields:
                 print("Error: No valid bitfields specified", file=sys.stderr)
                 sys.exit(1)
             results = decode_bitfields(value, bitfields)
-            print(format_output(results))
+            if args.list:
+                print(format_verbose_output(bitfields, results))
+            else:
+                print(format_output(results))
         except ValueError as e:
             print(f"Error: {e}", file=sys.stderr)
             sys.exit(1)
     else:
-        print("Usage: bitfield_decode.py [value] [bitfields]", file=sys.stderr)
+        print("Usage: bitfield_decode.py [-l|--list] [value] [bitfields]", file=sys.stderr)
         print("  value: Hex (0x###) or decimal number", file=sys.stderr)
         print("  bitfields: Space or comma-separated bitfield specs", file=sys.stderr)
         print("  Example: bitfield_decode.py 0x5453 '15:12 11:7 6:5 4:0'", file=sys.stderr)

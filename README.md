@@ -2,8 +2,61 @@
 
 A collection of Python utilities for working with hardware register bitfields.
 
-- `register_decode.py` - Register Dump Decoder
 - `bitfield_decode.py` - Bitfield Decoder
+- `register_decode.py` - Register Dump Decoder
+
+## `bitfield_decode.py` - Bitfield Value Extractor
+
+Extract bitfield values from a single hex or decimal number.
+
+**Usage:**
+```bash
+python bitfield_decode.py [-l|--list] [value] [bitfields]
+```
+
+**Arguments:**
+- `-l, --list`: Output each bitfield on a separate line with alignment
+- `value`: Hex (0x###) or decimal number
+- `bitfields`: Space or comma-separated bitfield specs
+
+**Examples:**
+```bash
+# Extract specific bitfields from a hex value
+python bitfield_decode.py 0x5453 "15:12 11:7 6:5 4:0"
+# Output: x5 x8 x2 x13
+
+# Extract bitfields from decimal input
+python bitfield_decode.py 21587 "15:12 11:7 6:5 4:0"
+# Output: x5 x8 x2 x13
+
+# Using comma-separated values for bitfields
+python bitfield_decode.py 21587 "15:12,11:7,6:5,4:0"
+# Output: x5 x8 x2 x13
+
+# Use list mode for verbose output
+python bitfield_decode.py --list 0x5453 "15:12 11:7 6:5 4 3:0"
+# Output:
+# 15:12 : x5
+#  11:7 : x8
+#   6:5 : x2
+#     4 : 1
+#   3:0 : x3
+
+# Single bits output as 0 or 1 in list mode
+python bitfield_decode.py -l 0xD "3 2 1 0"
+# Output:
+# 3 : 1
+# 2 : 1
+# 1 : 0
+# 0 : 1
+
+# Interactive mode (run without arguments)
+python bitfield_decode.py
+# > 0xFF 7:4 3:0
+# xF xF
+# > 0x5453 15:12 11:7 6:5 4 3:0
+# x5 x8 x2 x1 x3
+```
 
 ## `register_decode.py` - Register Dump Decoder
 
@@ -28,39 +81,6 @@ See the `data/` directory for example input and output files:
 - `reg_dump.csv` - Sample register dump
 - `mapping.csv` - Sample bitfield mappings
 - `out.csv` - Expected decoder output
-
-## 2. `bitfield_decode.py` - Bitfield Value Extractor
-
-Extract bitfield values from a single hex or decimal number.
-
-**Usage:**
-```bash
-python bitfield_decode.py [value] [bitfields]
-```
-
-**Examples:**
-```bash
-# Extract specific bitfields from a hex value
-python bitfield_decode.py 0x5453 "15:12 11:7 6:5 4:0"
-# Output: 0x5 0x8 0x2 0x13
-
-# Use decimal input and comma separators
-python bitfield_decode.py 21587 "15:12, 11:7, 6:5, 4:0"
-
-# Interactive mode (run without arguments)
-python bitfield_decode.py
-> 0xFF 7:4 3:0
-0xF 0xF
-```
-
-**Bitfield Format:**
-- Single bit: `15` or `8`
-- Range: `31:26` (high:low)
-- Separators: spaces, commas, or both
-
-## Requirements
-
-Python 3.6+ (no external dependencies)
 
 ## License
 
