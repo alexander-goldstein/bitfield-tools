@@ -5,6 +5,43 @@ A collection of Python utilities for working with hardware register bitfields.
 - `bitfield_decode.py` - Bitfield Decoder
 - `register_decode.py` - Register Dump Decoder
 
+### Installation (Optional)
+
+**Dependencies:**
+
+For command history support (up/down arrows) in interactive mode:
+```bash
+# Windows only (Unix/Linux/macOS have readline built-in)
+pip install pyreadline3 
+
+# Or install from requirements.txt
+pip install -r requirements.txt
+```
+
+Note: The tools work without installing dependencies, but you won't have command history in interactive mode.
+
+**Shell Aliases:**
+
+Add these aliases to your `~/.bashrc` file for quick access:
+
+```bash
+alias bfd='python ~/path/to/bitfield_decode.py'
+alias register-decode='python ~/path/to/register_decode.py'
+```
+
+Then reload your shell:
+```bash
+source ~/.bashrc
+```
+
+Now you can use:
+```bash
+bfd 0x5453 "15:12 11:7 6:5 4:0"           # instead of python bitfield_decode.py ...
+register-decode --map data/mapping.csv --input data/reg_dump.csv  # instead of python register_decode.py ...
+```
+
+---
+
 ## `bitfield_decode.py` - Bitfield Value Extractor
 
 Extract bitfield values from a single hex or decimal number.
@@ -57,6 +94,8 @@ python bitfield_decode.py
 # > 0x5453 15:12 11:7 6:5 4 3:0
 # x5 x8 x2 x1 x3
 ```
+
+---
 
 ## `register_decode.py` - Register Dump Decoder
 

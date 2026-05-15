@@ -1,0 +1,5 @@
+# Optional dependencies for enhanced functionality
+
+# Command history support (up/down arrows) in interactive mode
+# Only needed on Windows - Unix/Linux/macOS have readline built-in
+pyreadline3

@@ -16,6 +16,15 @@ import sys
 import re
 import argparse
 
+# Try to import readline for command history (optional)
+try:
+    import readline  # Unix/Linux/macOS
+except ImportError:
+    try:
+        import pyreadline3 as readline  # Windows
+    except ImportError:
+        readline = None  # No readline available
+
 
 def parse_value(value_str):
     """Parse a value string as hex or decimal."""
