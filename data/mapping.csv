@@ -12,20 +12,14 @@ Address,Register Name,Register Width,Bitfield Range,Bitfield Name,Bitfield Descr
 0x5F,M1_SW_MODE,,5,latch_l_active,Activates latching of the position to XLATCH upon an active edge on the left reference switch input REFL. Activate latch_l_active to detect any spurious stop event by reading status_latch_l.,
 0x5F,M1_SW_MODE,,4,swap_lr,Swap the left and the right reference switch input REFL and REFR,"0x0: Default assignments 
 0x1: REFL and REFR switched"
-0x5F,M1_SW_MODE,,3,pol_stop_r,,"0x0: Not inverted, active high: a high level on 
-REFR stops the motor 
-0x1: Inverted, active low: a low level on REFR 
-stops the motor"
-0x5F,M1_SW_MODE,,2,pol_stop_l,Sets the active polarity of the left reference switch input,"0x0: Non-inverted, high active: a high level on 
-REFL stops the motor 
-0x1: Inverted, low active: a low level on REFL 
-stops the motor"
+0x5F,M1_SW_MODE,,3,pol_stop_r,,"0x0: Not inverted, active high: a high level on REFR stops the motor 
+0x1: Inverted, active low: a low level on REFR stops the motor"
+0x5F,M1_SW_MODE,,2,pol_stop_l,Sets the active polarity of the left reference switch input,"0x0: Non-inverted, high active: a high level on REFL stops the motor 
+0x1: Inverted, low active: a low level on REFL stops the motor"
 0x5F,M1_SW_MODE,,1,stop_r_enable,Enables automatic motor stop during active right reference switch input. The motor restarts when the stop switch is released.,
 0x5F,M1_SW_MODE,,0,stop_l_enable,Enables automatic motor stop during active left reference switch input. The motor restarts when the stop switch is released,
-0x62,M1_POSITION_P_CTRL,,28,en_tol_on_pos_reached,Enable tolerance once the motion controller reached the target position.,"0x0: The P-controller ignores absolute errors below 
-the tolerance. 
-0x1: The P-controller ignores absolute errors below tolerance only when the pos_reached flag (M1_RAMP_STAT[9]) of the motion controller is set to 1. "
+0x62,M1_POSITION_P_CTRL,,28,en_tol_on_pos_reached,Enable tolerance once the motion controller reached the target position.,"0x0: The P-controller ignores absolute errors below the tolerance.
+0x1: The P-controller ignores absolute errors below tolerance only when the pos_reached flag (M1_RAMP_STAT[9]) of the motion controller is set to 1."
 0x62,M1_POSITION_P_CTRL,,23:16,Tolerance,P-controller error tolerance setting.,
 0x62,M1_POSITION_P_CTRL,,9:0,P,"Proportional parameter for position P-regulator. P=0 disables P-regulator. P > 0 enables P-regulator function.
 Unit 10.0, no fractional part.",
-,,,,,,
