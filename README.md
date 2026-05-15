@@ -1,98 +1,67 @@
-# Bitfield Decoder
+# Bitfield Tools
 
-A Python tool for decoding hardware register values based on bitfield mappings. This utility helps analyze register dumps by extracting individual bitfield values and mapping them to human-readable descriptions.
+A collection of Python utilities for working with hardware register bitfields.
 
-## Features
+- `register_decode.py` - Register Dump Decoder
+- `bitfield_decode.py` - Bitfield Decoder
 
-- Extract individual bitfield values from register dumps
-- Support for single-bit and multi-bit fields
-- Decode values using configurable mapping tables
-- Format output with proper hex notation and bit grouping
-- Handle multi-line decode descriptions from CSV mappings
+## `register_decode.py` - Register Dump Decoder
 
-## Requirements & Installation
+Decode register dumps using bitfield mapping files. Extracts individual bitfield values and maps them to human-readable descriptions.
 
-- Python 3.6 or higher
-- No external dependencies (uses only Python standard library)
-
-Clone this repository and run the scripts.
-
-## Usage
-
+**Example:**
 ```bash
-python register_decode.py -m <mapping.csv> -i <reg_dump.csv> [-o <output.csv>] [-w <bits>]
+# Use default output (input_decoded.csv) and 32-bit width
+python register_decode.py --map data/mapping.csv --input data/reg_dump.csv
+
+# Specify output and default bitfield width
+python register_decode.py --map data/mapping.csv --input data/reg_dump.csv --output decoded.csv --width 16
 ```
 
-### Arguments
-
+**Arguments:**
 - `-m, --map`: Register mapping CSV file (required)
 - `-i, --inputs`: Input register dump CSV file (required)
-- `-o, --output`: Output CSV file path (optional, defaults to `<input>_decoded.csv`)
+- `-o, --output`: Output CSV file (optional, defaults to `<input>_decoded.csv`)
 - `-w, --width`: Default register width in bits (optional, default: 32)
 
-### Examples
+See the `data/` directory for example input and output files:
+- `reg_dump.csv` - Sample register dump
+- `mapping.csv` - Sample bitfield mappings
+- `out.csv` - Expected decoder output
 
+## 2. `bitfield_decode.py` - Bitfield Value Extractor
+
+Extract bitfield values from a single hex or decimal number.
+
+**Usage:**
 ```bash
-# Use default output filename (reg_dump_decoded.csv)
-python register_decode.py -m mapping.csv -i reg_dump.csv
-
-# Specify output filename and custom width
-python register_decode.py -m mapping.csv -i reg_dump.csv -o decoded.csv -w 16
-
-# Using long-form arguments
-python register_decode.py --map mapping.csv --inputs reg_dump.csv --output decoded.csv --width 32
+python bitfield_decode.py [value] [bitfields]
 ```
 
-## Input File Formats
+**Examples:**
+```bash
+# Extract specific bitfields from a hex value
+python bitfield_decode.py 0x5453 "15:12 11:7 6:5 4:0"
+# Output: 0x5 0x8 0x2 0x13
 
-### Register Dump (`reg_dump.csv`)
+# Use decimal input and comma separators
+python bitfield_decode.py 21587 "15:12, 11:7, 6:5, 4:0"
 
-Contains the register addresses and their current values:
-
-```csv
-Register, Value
-0x5F,0x550D
-0x62,0x101B000C
+# Interactive mode (run without arguments)
+python bitfield_decode.py
+> 0xFF 7:4 3:0
+0xF 0xF
 ```
 
-### Register Mapping (`mapping.csv`)
+**Bitfield Format:**
+- Single bit: `15` or `8`
+- Range: `31:26` (high:low)
+- Separators: spaces, commas, or both
 
-Defines the bitfield structure for each register. 
+## Requirements
 
-Newlines are supported by enclosing in quotes.
-
-```csv
-Address,Register Name,Register Width,Bitfield Range,Bitfield Name,Bitfield Description,Bitfield Decode
-0x5F,M1_SW_MODE,,14,virtual_Step_enc,Source for virtual stop,"0x0: Ramp-generator position
-0x1: Encoder position"
-0x5F,M1_SW_MODE,,13,en_virtual_stop_r,Enable automatic stop,
-0x5F,M1_SW_MODE,,12:10,multi_bit_field,A multi-bit field,"0x0: Option A
-0x1: Option B"
-```
-
-**Column Details:**
-
-- **Address**: Register address in hex (e.g., `0x5F`)
-- **Register Name**: Human-readable register name
-- **Register Width**: Width in bits (optional, uses default-width if empty)
-- **Bitfield Range**: Bit position(s)
-  - Single bit: `14`
-  - Range: `23:16` (high:low notation)
-- **Bitfield Name**: Name of the bitfield
-- **Bitfield Description**: Detailed description (optional)
-- **Bitfield Decode**: Value-to-meaning mappings (optional)
-  - Format: `0xN: Description` (one per line within the cell)
-
-## Output Format
-
-The output CSV contains one row per bitfield:
-
-```csv
-Register,Register Name,Value (Bitfield Values),Bitfield,Bitfield Value,Decoding
-0x5F,M1_SW_MODE,"0x550D (101,0101,0000,1101)",virtual_Step_enc[14],1,0x1: Encoder position
-0x5F,M1_SW_MODE,"0x550D (101,0101,0000,1101)",en_virtual_stop_r[13],0,
-```
+Python 3.6+ (no external dependencies)
 
 ## License
 
-MIT License - see LICENSE file for details.
+MIT License - see LICENSE file for details
